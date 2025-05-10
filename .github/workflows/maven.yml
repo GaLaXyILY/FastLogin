@@ -60,22 +60,4 @@ jobs:
          title: "Release ${{ env.RELEASE_VERSION }}" 
          files: | 
            target/*.jar
-  dependency:
-    runs-on: ubuntu-latest
 
-    # Run steps
-    steps:
-      # Pull changes
-      - uses: actions/checkout@v4
-
-      # Setup Java
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version-file: '.java-version'
-          cache: 'maven'
-
-      - name: Submit Dependency Snapshot
-        if: ${{ github.event_name == 'push' }}
-        uses: advanced-security/maven-dependency-submission-action@v4.1.2
