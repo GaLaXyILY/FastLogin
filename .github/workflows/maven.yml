@@ -52,12 +52,8 @@ jobs:
       - name: "Build & test" 
         run: | 
          echo "done!" 
-      - uses: "marvinpinto/action-automatic-releases@latest" 
-        with: 
-         repo_token: "${{ secrets.GITHUB_TOKEN }}" 
-         automatic_release_tag: "${{ env.RELEASE_VERSION }}" 
-         prerelease: false 
-         title: "Release ${{ env.RELEASE_VERSION }}" 
-         files: | 
-           target/*.jar
-
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fsatlogin
+          path: target/*.jar
