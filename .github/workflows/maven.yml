@@ -45,9 +45,6 @@ jobs:
 
   dependency:
     runs-on: ubuntu-latest
-    permissions:
-      # Write only necessary for dependency submission all others then default to read
-      contents: write
 
     # Run steps
     steps:
