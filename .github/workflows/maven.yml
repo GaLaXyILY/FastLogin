@@ -46,7 +46,6 @@ jobs:
         # Run non-interactive, package (with compile+test),
         # ignore snapshot updates, because they are likely to have breaking changes, enforce checksums
         run: mvn test --batch-mode --threads 2.0C --no-snapshot-updates --strict-checksums --file pom.xml
-      - run: mkdir staging && cp FastLogin/target/*.jar staging 
       - name: Set Release version env variable 
         run: | 
          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV 
@@ -60,7 +59,7 @@ jobs:
          prerelease: false 
          title: "Release ${{ env.RELEASE_VERSION }}" 
          files: | 
-           staging/*.jar
+           target/*.jar
   dependency:
     runs-on: ubuntu-latest
 
