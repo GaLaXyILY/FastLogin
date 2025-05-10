@@ -6,13 +6,17 @@ name: Maven Build
 
 # Build on every pull request regardless of the branch
 # Wiki: https://help.github.com/en/actions/reference/events-that-trigger-workflows
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: 
+   workflow_dispatch: 
+     inputs: 
+       logLevel: 
+         description: 'Log level' 
+         required: true 
+         default: 'warning' 
+   push: 
+     branches: [ "*" ] 
+   pull_request: 
+     branches: [ "*" ] 
 
 jobs:
   # job id
@@ -42,7 +46,21 @@ jobs:
         # Run non-interactive, package (with compile+test),
         # ignore snapshot updates, because they are likely to have breaking changes, enforce checksums
         run: mvn test --batch-mode --threads 2.0C --no-snapshot-updates --strict-checksums --file pom.xml
-
+      - run: mkdir staging && cp FastLogin/target/*.jar staging 
+      - name: Set Release version env variable 
+        run: | 
+         echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV 
+      - name: "Build & test" 
+        run: | 
+         echo "done!" 
+      - uses: "marvinpinto/action-automatic-releases@latest" 
+        with: 
+         repo_token: "${{ secrets.GITHUB_TOKEN }}" 
+         automatic_release_tag: "${{ env.RELEASE_VERSION }}" 
+         prerelease: false 
+         title: "Release ${{ env.RELEASE_VERSION }}" 
+         files: | 
+           staging/*.jar
   dependency:
     runs-on: ubuntu-latest
 
